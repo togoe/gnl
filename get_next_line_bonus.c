@@ -6,7 +6,7 @@
 /*   By: ctogoe <ctogoe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 13:46:20 by ctogoe            #+#    #+#             */
-/*   Updated: 2021/04/28 16:57:04 by ctogoe           ###   ########.fr       */
+/*   Updated: 2021/04/30 21:38:48 by ctogoe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ char	*ft_line_end(char *stock, char **line, int i, int ret)
 	else if (ret == 0)
 	{
 		*line = ft_strdup(stock);
+		free(stock);
 		return (stock);
 	}
 	free(stock);
@@ -54,7 +55,7 @@ char	*ft_line_end(char *stock, char **line, int i, int ret)
 
 int		get_next_line(int fd, char **line)
 {
-	static char	*stock = NULL;
+	static char	*stock[1024];
 	char		buf[BUFFER_SIZE + 1];
 	int			ret;
 	int			i;
@@ -65,15 +66,15 @@ int		get_next_line(int fd, char **line)
 	while ((ret = read(fd, buf, BUFFER_SIZE)) > 0 || i != -1)
 	{
 		buf[ret] = '\0';
-		stock = ft_strjoin(stock, buf);
-		i = find_n(stock, '\n');
+		stock[fd] = ft_strjoin(stock[fd], buf);
+		i = find_n(stock[fd], '\n');
 		if (i != -1)
 		{
-			stock = ft_line(stock, line, i);
+			stock[fd] = ft_line(stock[fd], line, i);
 			return (1);
 		}
 	}
-	stock = ft_line_end(stock, line, i, ret);
+	stock[fd] = ft_line_end(stock[fd], line, i, ret);
 	if (ret == 0 && i != -1)
 		return (1);
 	else if (ret == 0)

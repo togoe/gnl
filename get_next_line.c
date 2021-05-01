@@ -6,7 +6,7 @@
 /*   By: ctogoe <ctogoe@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 13:46:20 by ctogoe            #+#    #+#             */
-/*   Updated: 2021/04/28 15:38:55 by ctogoe           ###   ########.fr       */
+/*   Updated: 2021/04/30 17:51:45 by ctogoe           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,17 @@ char	*ft_line_end(char *stock, char **line, int i, int ret)
 	else if (ret == 0)
 	{
 		*line = ft_strdup(stock);
+		free(stock);
 		return (stock);
 	}
-	free(stock);
+	if (stock)
+		free(stock);
 	return (stock);
 }
 
 int		get_next_line(int fd, char **line)
 {
-	static char	*stock = NULL;
+	static char	*stock;
 	char		buf[BUFFER_SIZE + 1];
 	int			ret;
 	int			i;
